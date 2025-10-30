@@ -1,0 +1,977 @@
+{
+  "name": "Eenie menie",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Listen for incoming events').first().json.message.from.id }}"
+      },
+      "id": "d2287bea-de47-4180-8ee6-55d4ab1a89da",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        2912,
+        -6440
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "model": "gpt-4.1-mini",
+        "options": {
+          "temperature": 0.4
+        }
+      },
+      "id": "46511f47-1687-4cbe-ae41-ceb205ed1f11",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        2784,
+        -6440
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "QGZeiaYxpXH3BWx5",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "64fe44db-af19-43eb-9ff1-de0a72a9e645",
+      "name": "Listen for incoming events",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        992,
+        -6664
+      ],
+      "webhookId": "322dce18-f93e-4f86-b9b1-3305519b7834",
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "PxJXrIW7Yo1ZLSNI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "text",
+              "stringValue": "={{ $json.message.chat }}"
+            },
+            {
+              "name": "voice",
+              "stringValue": "={{ $json.message.voice }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b67a2a93-517b-469e-aaa4-32c422710743",
+      "name": "Voice or Text",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1216,
+        -6664
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "8105c39f-9e87-44c4-9215-b3777f0b4164",
+      "name": "Get Voice File",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1664,
+        -6760
+      ],
+      "webhookId": "24273e7e-6133-415e-8627-a9d6dc0f107c",
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "PxJXrIW7Yo1ZLSNI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Process Telegram Request\n",
+        "height": 551,
+        "width": 1616,
+        "color": 5
+      },
+      "id": "5537c777-f003-4673-b48a-4993a0c10520",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1128,
+        -6959
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "13817629-d24b-469a-abae-3f8109da416f"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1ab33553-bf4c-4185-98b4-77d05fcd9128",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.3,
+      "position": [
+        1440,
+        -6664
+      ],
+      "id": "878f7455-aed9-4a21-8d1d-28e9692f0018",
+      "name": "Switch",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "=2110080062aids@gmail.com",
+          "mode": "id",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        },
+        "remindersUi": {
+          "remindersValues": [
+            {
+              "method": "popup",
+              "minutes": 20
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        3040,
+        -6440
+      ],
+      "id": "be17d1d5-80c2-46bd-a584-20f456cc0f48",
+      "name": "Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "Kc1z7wcSn3zp0aj2",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }} \n",
+        "options": {
+          "systemMessage": "=You are a helpful assistant\n\nHere is the current date and time :{{ $now.format('yyyy-MM-dd') }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        2904,
+        -6664
+      ],
+      "id": "9c7f7f75-7fde-4f05-abd1-53ba7d75ac58",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `Sign off mails as \"Harsh\" `, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        3168,
+        -6440
+      ],
+      "id": "33aed578-56a0-47fb-ac2d-8eb230382be2",
+      "name": "Gmail",
+      "webhookId": "6e81f9b3-b487-40da-b1a5-040af4f431d7",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Z0Ae612QbsfPqu2a",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Using Assembly Ai  \n can take some time to process so start with the voice msg then conclude with text msg for easy and fast approach.\n",
+        "height": 320,
+        "width": 656
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1832,
+        -6920
+      ],
+      "typeVersion": 1,
+      "id": "334984e2-19b3-4d59-a996-e5cc9c798c22",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        3008,
+        -7296
+      ],
+      "id": "ca980d6d-d0c6-4de2-a65b-60b18bf3fc4c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "content": "## Morning routine\n",
+        "height": 272,
+        "width": 976,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2864,
+        -7120
+      ],
+      "typeVersion": 1,
+      "id": "fc1f63c7-c248-44b5-8f1c-f08e1fb6ab85",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "## Night routine ",
+        "height": 608,
+        "width": 944,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2880,
+        -7456
+      ],
+      "typeVersion": 1,
+      "id": "2d6b6ff2-a765-4e3b-a4ca-ed15e1cce3b8",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        3248,
+        -7184
+      ],
+      "id": "482de68a-5c35-43f8-b996-dd7ece4ddd7d",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "QGZeiaYxpXH3BWx5",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use the tool when your asked to retrieve data",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "=2110080062aids@gmail.com",
+          "mode": "id"
+        },
+        "timeMin": "={{$now.startOf('day')}}",
+        "timeMax": "={{ $now.endOf('day')}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        3376,
+        -7184
+      ],
+      "id": "4b2cca75-03ce-4fb3-83be-7b79e1bc7e82",
+      "name": "Get events ",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "LMvQRoiehgQMsw9a",
+          "name": "Google Calendar account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "2043793630",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3584,
+        -7296
+      ],
+      "id": "98474251-61ff-4e77-b70e-b26f88a7f4d5",
+      "name": "Send a text message",
+      "webhookId": "c5d9e3b3-a100-40bb-b0d3-6ea797a373ab",
+      "credentials": {
+        "telegramApi": {
+          "id": "PxJXrIW7Yo1ZLSNI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 22
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        3008,
+        -7008
+      ],
+      "id": "b64788f4-e529-4d9e-8562-b11f5176b80d",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "chatId": "2043793630",
+        "text": "={{ $json.output }}",
+        "replyMarkup": "forceReply",
+        "forceReply": {
+          "force_reply": true
+        },
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3584,
+        -7008
+      ],
+      "id": "5b10470d-d9a3-4e96-8e06-7fa0df0bd43e",
+      "name": "Send a text message1",
+      "webhookId": "058a7209-a4cd-4013-b433-c561120cd794",
+      "credentials": {
+        "telegramApi": {
+          "id": "PxJXrIW7Yo1ZLSNI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Personal assistant which takes up you tasks easily just by your voice or msg input \n",
+        "height": 928,
+        "width": 3248
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        608,
+        -7216
+      ],
+      "typeVersion": 1,
+      "id": "c5bae937-f47f-450d-aacf-19d18b48b01d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "operation": "sendAnimation",
+        "chatId": "2043793630",
+        "file": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXU3dG5kdWVsOGg2cno3Mmg1MGVjMzNiYTdvNWtoeGdldWI2YXN0cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1Q6K09gcxYWcUxxraT/giphy.gif",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        3760,
+        -7296
+      ],
+      "id": "bbc6cc5e-8062-4671-b791-27918df2af0b",
+      "name": "Send an animated file",
+      "webhookId": "827130cb-ed65-480e-8ee1-a1aef171281e",
+      "credentials": {
+        "telegramApi": {
+          "id": "PxJXrIW7Yo1ZLSNI",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=good morning",
+        "options": {
+          "systemMessage": "Good morning! Please generate a motivational morning message for me. \nInclude: \n- A warm greeting \n- Motivation for 5-min meditation \n- Motivation for 20-min workout \n- Get the pending tasks and todays events from  the calendar tool and bold them.\nWrite it like a personal coach in a cheerful tone and bit concise. \n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        3232,
+        -7408
+      ],
+      "id": "25b293a8-2dfd-4e13-8b5e-a04980a31864",
+      "name": "Night routine "
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "You are a friendly night reflection assistant.\n\n1. Greet the user warmly.\n2. Summarize the day based on their Google Tasks and Calendar events.\n3. Ask briefly how they felt today (mood).\n4. Mention gratitude, something like: “What are you grateful for today?”\n5. List any incomplete tasks to carry forward tomorrow.\n6. End with a calm message like: “Sleep well 🌙”\n\nRespond naturally and conversationally.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        3232,
+        -7008
+      ],
+      "id": "9db4ce17-146d-4692-ac24-9e64968c4f99",
+      "name": "Morning routine"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "authorization",
+              "value": "8fc13cf9d3ac4cd189ac8ed439f3415e"
+            },
+            {
+              "name": "content-type",
+              "value": "application/octet-stream"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1888,
+        -6760
+      ],
+      "id": "38413b07-3a51-4588-967e-fd03ac9213e2",
+      "name": "File is sent to assembly app"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/transcript",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=8fc13cf9d3ac4cd189ac8ed439f3415e"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "audio_url",
+              "value": "={{ $json.upload_url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2112,
+        -6760
+      ],
+      "id": "dc2dfc51-05d7-417b-82fe-223ff041f995",
+      "name": "Transcribes to a link"
+    },
+    {
+      "parameters": {
+        "url": "=https://api.assemblyai.com/v2/transcript/{{ $json.id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "8fc13cf9d3ac4cd189ac8ed439f3415e"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2336,
+        -6760
+      ],
+      "id": "a6c918cf-f978-431d-88bd-923633faa54b",
+      "name": "Formation of text "
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b6ed635a-6057-40ee-a501-c1a3312c3260",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2560,
+        -6760
+      ],
+      "id": "90e35fef-c4f7-4132-b36b-cbc82719b7d1",
+      "name": "text form"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e30976db-cfab-4c39-97a0-3f7d41f6000e",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2560,
+        -6568
+      ],
+      "id": "a42497ab-0755-43bc-a1e3-0c27cd27f54e",
+      "name": "text form1"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false,
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "e35c04ff-a050-4564-8c1b-5b22b556872f",
+      "name": "Telegram output",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        3376,
+        -6664
+      ],
+      "webhookId": "e699405e-8e52-4d38-a06b-1fa8edf050bd",
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "PxJXrIW7Yo1ZLSNI",
+          "name": "Telegram account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-10-29T23:39:04.769+05:30",
+          "Readable date": "October 29th 2025, 11:39:04 pm",
+          "Readable time": "11:39:04 pm",
+          "Day of week": "Wednesday",
+          "Year": "2025",
+          "Month": "October",
+          "Day of month": "29",
+          "Hour": "23",
+          "Minute": "39",
+          "Second": "04",
+          "Timezone": "Asia/Kolkata (UTC+05:30)"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Voice or Text": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voice File": {
+      "main": [
+        [
+          {
+            "node": "File is sent to assembly app",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listen for incoming events": {
+      "main": [
+        [
+          {
+            "node": "Voice or Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get Voice File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "text form1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Night routine ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Night routine ",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Morning routine",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get events ": {
+      "ai_tool": [
+        [
+          {
+            "node": "Night routine ",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Morning routine",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a text message": {
+      "main": [
+        [
+          {
+            "node": "Send an animated file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Morning routine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Night routine ": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Morning routine": {
+      "main": [
+        [
+          {
+            "node": "Send a text message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "File is sent to assembly app": {
+      "main": [
+        [
+          {
+            "node": "Transcribes to a link",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribes to a link": {
+      "main": [
+        [
+          {
+            "node": "Formation of text ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formation of text ": {
+      "main": [
+        [
+          {
+            "node": "text form",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "text form": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "text form1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "callerPolicy": "workflowsFromSameOwner",
+    "executionOrder": "v0",
+    "availableInMCP": false,
+    "timezone": "Asia/Kolkata"
+  },
+  "versionId": "55d4a5e3-42f2-435e-a34c-71bcf0e4c2d3",
+  "meta": {
+    "templateId": "2462",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c7aff896fb07f455de0098be408afd0eb38575306dfe338c94217eb3040018ee"
+  },
+  "id": "JsKwznQJ9ZApeHgT",
+  "tags": []
+}
